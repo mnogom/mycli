@@ -1,5 +1,8 @@
-lint:
-	uv run ruff check ./mycli ./main.py
+tox:
+	uvx tox
 
-mypy:
-	uv run mypy ./mycli ./main.py --check-untyped-defs
+test:
+	uvx tox run -e 3.11
+
+format:
+	uvx ruff format mycli tests

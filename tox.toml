@@ -1,0 +1,30 @@
+requires = ["tox>=4"]
+env_list = ["3.10", "3.11", "3.12", "lint", "type"]
+
+[env_run_base]
+description = "run unit tests"
+deps = [
+    "pytest>=8",
+    "pytest-cov>=6"
+]
+commands = [
+    ["pytest", "-vvv", { replace = "posargs", default = ["tests"], extend = true } ],
+    ["coverage", "report", "--show-missing"],
+    ["coverage", "xml", "-o", "coverage.xml"]
+]
+
+
+[env.lint]
+description = "run linters"
+skip_install = true
+deps = [
+    "ruff>=0.11.2"
+]
+commands = [["ruff", "check"]]
+
+[env.type]
+description = "run type checks"
+deps = [
+    "mypy>=1.15.0"
+]
+commands = [["mypy", "mycli", "tests"]]
