@@ -5,6 +5,7 @@ from typing import Callable, Any
 @dataclass(slots=True, frozen=True)
 class PositionalArg:
     description: str | None = None
+    fabric: Callable[[str], Any] | None = None
 
 
 @dataclass(slots=True, frozen=True)

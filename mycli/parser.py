@@ -5,7 +5,7 @@ from mycli.args_types import PositionalArg, NamedArg, FlagArg
 
 
 class Parser:
-    def __init__(self, description=None):
+    def __init__(self, description=None) -> None:
         self.__command = None
         self.__positional_args: list[tuple[str, type, PositionalArg]] = []
         self.__named_args: list[tuple[str, type, NamedArg]] = []
@@ -13,11 +13,9 @@ class Parser:
         self.__description = description
 
         self.__help_arg = FlagArg(["--help", "-h"], action=self.__show_help)
-        self.__flag_args.append(
-            ("", None, self.__help_arg)
-        )
+        self.__flag_args.append(("", None.__class__, self.__help_arg))
 
-    def command(self, func):
+    def command(self, func) -> None:
         self.__command = func
         type_hints = get_type_hints(func, include_extras=True)
         for var, hint in type_hints.items():
@@ -32,10 +30,13 @@ class Parser:
             else:
                 raise Exception(f"Unknown argument type {arg_notation}")
 
-    def __show_help(self):
+    def __show_help(self) -> None:
+        # TODO: kf: Fix typing for arg_notation
+        arg_notation: PositionalArg | NamedArg | FlagArg
+
         help_text = f"{self.__description}\n\n"
         for arg_name, _, arg_notation in self.__positional_args:
-            help_text += (f"  {arg_name}: {arg_notation.description}\n")  # noqa: E501
+            help_text += f"  {arg_name}: {arg_notation.description}\n"  # noqa: E501
         for _, _, arg_notation in self.__named_args:
             help_text += f"  {', '.join(arg_notation.aliases)}: {arg_notation.description}\n"  # noqa: E501
         for _, _, arg_notation in self.__flag_args:
@@ -43,12 +44,15 @@ class Parser:
         print(help_text)
 
     @staticmethod
-    def __is_positional_arg(cli_arg: str):
+    def __is_positional_arg(cli_arg: str) -> bool:
         return not cli_arg.startswith("-")
 
-    def parse(self):
+    def parse(self) -> None:
+        if not self.__command:
+            raise Exception("No command specified")
+
         cli_argv = sys.argv[1:]
-        func_args = dict()
+        func_args = {}
 
         positional_index = 0
 
