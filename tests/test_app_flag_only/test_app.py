@@ -1,8 +1,9 @@
 import subprocess
+from pathlib import Path
 
 
 def test_app_with_flag():
-    command = ["tests/test_app_flag_only/app.py", "--foo"]
+    command = [Path(__file__).parent / "app.py", "--foo"]
 
     proc = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE

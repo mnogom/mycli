@@ -1,8 +1,10 @@
 import subprocess
+from pathlib import Path
 
 import pytest
 
-APP = "tests/test_app_all_arg_types/app.py"
+
+APP = Path(__file__).parent / "app.py"
 
 
 @pytest.mark.parametrize(
