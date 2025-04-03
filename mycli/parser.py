@@ -47,7 +47,7 @@ class Parser:
     def __is_positional_arg(cli_arg: str) -> bool:
         return not cli_arg.startswith("-")
 
-    def parse(self) -> None:
+    def parse(self) -> None:  # noqa: C901
         if not self.__command:
             raise Exception("No command specified")
 
@@ -64,15 +64,24 @@ class Parser:
                 return
 
             if self.__is_positional_arg(cli_arg):
-                arg_name, arg_type, _ = self.__positional_args[
+                arg_name, arg_type, arg_notation = self.__positional_args[
                     positional_index
                 ]
-                func_args[arg_name] = arg_type(cli_arg)
+                if arg_notation.serializer:
+                    func_args[arg_name] = arg_notation.serializer(cli_arg)
+                else:
+                    func_args[arg_name] = arg_type(cli_arg)
                 positional_index += 1
                 continue
+
             for arg_name, arg_type, arg_notation in self.__named_args:
                 if cli_arg in arg_notation.aliases:
-                    func_args[arg_name] = arg_type(cli_argv.pop(0))
+                    if arg_notation.serializer:
+                        func_args[arg_name] = arg_notation.serializer(
+                            cli_argv.pop(0)
+                        )
+                    else:
+                        func_args[arg_name] = arg_type(cli_argv.pop(0))
                     break
 
             for arg_name, arg_type, arg_notation in self.__flag_args:
