@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from mycli.parser import Parser
+from mycli.command import Parser
 from mycli.args_types import FlagArg
 
 

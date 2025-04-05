@@ -2,18 +2,18 @@
 
 from typing import Annotated
 
-from mycli.parser import Parser
+from mycli.command import Parser
 from mycli.args_types import PositionalArg, NamedArg, FlagArg
 
 
 def main() -> None:
     parser = Parser(description="Send a message")
 
-    message_arg = PositionalArg(description="Message to send")
-    address_arg = PositionalArg(description="Address to send to")
-    from_arg = NamedArg(["--from", "-f"], description="From address")
+    message_arg = PositionalArg(help="Message to send")
+    address_arg = PositionalArg(help="Address to send to")
+    from_arg = NamedArg(["--from", "-f"], help="From address")
     loud_arg = FlagArg(
-        ["--loud", "-l"], action=lambda: True, description="Be loud"
+        ["--loud", "-l"], action=lambda: True, help="Be loud"
     )
 
     @parser.command
